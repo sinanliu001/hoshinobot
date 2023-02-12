@@ -1,0 +1,17 @@
+account:
+  uin: 1708238479
+  password: '' # 密码为空时使用扫码登录
+  encrypt: false  # 是否开启密码加密
+heartbeat:
+  interval: 5
+default-middlewares: &default
+  access-token: 'Fkep-g4WKSUd_a_uE3AQ8KiraMJOVUwDlcTuWjjeLPbaZcjCiEbump3H7b8QBPaqAkOtQRlu0r_s5e86g9JP-Q'
+database:
+  leveldb:
+    enable: true
+servers:
+  - ws-reverse:
+      universal: ws://127.0.0.1:8080/ws/
+      reconnect-interval: 5000
+      middlewares:
+        <<: *default
