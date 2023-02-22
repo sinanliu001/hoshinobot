@@ -230,3 +230,13 @@
 05:13:43.191772 table@remove removed @51
 05:13:43.191772 table@remove removed @48
 05:13:43.191772 table@remove removed @45
+=============== Feb 22, 2023 (EST) ===============
+08:28:57.077594 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+08:28:57.078662 version@stat F·[0 1] S·145KiB[0B 145KiB] Sc·[0.00 0.00]
+08:28:57.078662 db@open opening
+08:28:57.078702 journal@recovery F·1
+08:28:57.078702 journal@recovery recovering @56
+08:28:57.080822 memdb@flush created L0@59 N·85 S·16KiB "\x00c\xf1X,v782":"\xfd\x06e\xe6,v826"
+08:28:57.081380 version@stat F·[1 1] S·161KiB[16KiB 145KiB] Sc·[0.25 0.00]
+08:28:57.085225 db@janitor F·4 G·0
+08:28:57.085225 db@open done T·6.5638ms
