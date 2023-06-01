@@ -23,7 +23,7 @@ COMMAND_SEP = set()         # 命令分隔符（hoshino不需要该特性，保�
 # 当QQ客户端与bot端不在同一台计算机时，可用http协议 
 RES_PROTOCOL = 'file'
 # 资源库文件夹，需可读可写，windows下注意反斜杠转义
-RES_DIR = r'C:/Users/admin/Desktop/bot/HoshinoBot/res'
+RES_DIR = 'C:\\users\\SinanLiu\\desktop\\bot\\mybot\\hoshinobot\\res'
 # 使用http协议时需填写，原则上该url应指向RES_DIR目录
 RES_URL = 'http://127.0.0.1:5000/static/'
 
@@ -39,11 +39,15 @@ MODULES_ON = {
     # 'hourcall',
     # 'kancolle',
     # 'mikan',
-    'pcrclanbattle',
-    'priconne',
+    # 'pcrclanbattle',
+    # 'priconne',
     # 'setu',
     # 'translate',
     # 'twitter',
+    # 'battle',
     'XQA',
-    'buy_potion_reminder'
+    'buy_potion_reminder',
+    'bili-notice-hoshino',
+    # 'teamup',
+    'carryover_cal',
 }
