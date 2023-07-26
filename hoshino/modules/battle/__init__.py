@@ -42,11 +42,14 @@ def readfile():
 
 zhaomu = readfile()
 
+out_group = ['2101686336', '462398105', '2020663057', '1708238479']
 
 def savefile():
     with open(JSON_TEAM, "w", encoding='utf8') as f:
         json.dump(zhaomu, f, ensure_ascii=False)
 
+def has_numbers(inputString):
+    return any(char.isdigit() for char in inputString)
 
 # 目录-挂树--------------------------------------------------------------------------------------------------------------------
 
@@ -78,10 +81,11 @@ async def ontree_handle(bot, ev):
         await bot.send(ev, msg)
         return
     message = ev.message.extract_plain_text()
-    if len(message.split()) != 2:
-        await bot.finish(ev, sv.help)
-        return
-    add_message_tree(gid, uid, ev, bot, message)
+    # if len(message.split()) != 2:
+    #     await bot.finish(ev, sv.help)
+    #     return
+    if has_numbers(message):
+        await add_message_tree(gid, uid, ev, bot, message)
 
 @sv.on_fullmatch('下树')
 # @sv.on_fullmatch('下班')
@@ -121,7 +125,7 @@ async def add_message_chudao(gid, uid, ev, bot, message):
         await bot.send(ev, msg, at_sender=True)
         return
 
-@sv.on_prefix('出刀')
+@sv.on_prefix('出刀', '进')
 # @sv.on_fullmatch('下班')
 async def chudao_handle(bot, ev):
     gid = str(ev.group_id)
@@ -132,10 +136,11 @@ async def chudao_handle(bot, ev):
         await bot.send(ev, msg)
         return
     message = ev.message.extract_plain_text()
-    if len(message.split()) != 2:
-        await bot.finish(ev, sv.help)
-        return
-    add_message_chudao(gid, uid, ev, bot, message)
+    # if len(message.split()) != 2:
+    #     await bot.finish(ev, sv.help)
+    #     return
+    if has_numbers(message):
+        await add_message_chudao(gid, uid, ev, bot, message)
 
 @sv.on_fullmatch('取消出刀')
 # @sv.on_fullmatch('下班')
@@ -185,10 +190,11 @@ async def hedao_handle(bot, ev):
         await bot.send(ev, msg)
         return
     message = ev.message.extract_plain_text()
-    if len(message.split()) != 2:
-        await bot.finish(ev, sv.help)
-        return
-    add_message_hedao(gid, uid, ev, bot, message)
+    # if len(message.split()) != 2:
+    #     await bot.finish(ev, sv.help)
+    #     return
+    if has_numbers(message):
+        await add_message_hedao(gid, uid, ev, bot, message)
 
 @sv.on_fullmatch('取消合刀')
 # @sv.on_fullmatch('下班')
@@ -264,6 +270,14 @@ def process_table(gid, title):
 
     msg = []
     qq = []
+    if title not in zhaomu[gid]:
+        if title == "合刀人":
+            msg = "没有人合刀"
+        if title == "出刀人":
+            msg = "没有人出刀"
+        if title == "树上人":
+            msg = "没有人挂树"
+        return msg, qq
     for user, message in zhaomu[gid][title].items():
         msg.append(f"{user}: {message}")
         qq.append(user)
@@ -290,7 +304,7 @@ async def query_table(bot, ev):
         await bot.send(ev, text)
         return
 
-    msg1, user1 = process_table(gid, "预约人")
+    # msg1, user1 = process_table(gid, "预约人")
     msg2, user2 = process_table(gid, "合刀人")
     msg3, user3 = process_table(gid, "出刀人")
     msg4, user4 = process_table(gid, "树上人")
@@ -300,8 +314,8 @@ async def query_table(bot, ev):
     else:
         new_msg2 = await render_forward_msg(msg2, user2, "合刀人")
         await bot.send_group_forward_msg(group_id=ev.group_id, messages=new_msg2)
-    if isinstance(msg2, str):
-        await bot.send(ev, msg2)
+    if isinstance(msg3, str):
+        await bot.send(ev, msg3)
     else:
         new_msg3 = await render_forward_msg(msg3, user3, "出刀人")
         await bot.send_group_forward_msg(group_id=ev.group_id, messages=new_msg3)
@@ -312,36 +326,124 @@ async def query_table(bot, ev):
         await bot.send_group_forward_msg(group_id=ev.group_id, messages=new_msg4)
 
 # 目录-上下班--------------------------------------------------------------------------------------------------------------------
+async def add_message_off(gid, uid, ev, bot, name):
+    if gid not in zhaomu:
+        zhaomu[gid] = {}
+    title = "下班人"
+    if title not in zhaomu[gid]:
+        zhaomu[gid][title] = {}
+    if uid not in zhaomu[gid][title]:
+        zhaomu[gid][title][uid] = name
+        savefile()
+        msg = "下班成功，感谢公会战付出^W^"
+        await bot.send(ev, msg, at_sender=True)
+        return
+    else:
+        if priv.get_user_priv(ev) < 21:
+            await bot.send(ev, f'你今天已经打卡了', at_sender=True)
+        else:
+            await bot.send(ev, f'已经打卡了下个🔨班', at_sender=True)
+        return
+def process_table_off(gid, title):
+
+    msg = []
+    qq = []
+    if title not in zhaomu[gid]:
+        return msg, qq
+    for user, message in zhaomu[gid][title].items():
+        msg.append(f"{message}")
+        qq.append(user)
+
+    if msg == []:
+        msg = "没有人下班TAT"
+
+    return msg, qq
+
+@sv.on_fullmatch('下班')
+async def add_off(bot, ev):
+    gid = str(ev.group_id)
+    uid = str(ev.user_id)
+    print(ev)
+    name = ev.sender['card'] or ev.sender['nickname'] or str(uid)
+    print(ev)
+    if uid == "80000000":
+        msg = "匿名个🔨"
+        await bot.send(ev, msg)
+        return
+    await add_message_off(gid, uid, ev, bot, name)
+    
+
+@sv.on_fullmatch('取消下班')
+async def delete_single_off(bot, ev):
+
+    gid = str(ev.group_id)
+    uid = str(ev.user_id)
+
+    if uid == "80000000":
+        msg = "匿名你取消下班个🔨哦"
+        await bot.send(ev, msg)
+        return
+
+    ok = delete_user(gid, uid, "下班人")
+
+    if ok:
+        msg = "取消下班成功～"
+    else:
+        msg = "下班表没找你惹qwq是不是记错了?"
+
+    await bot.send(ev, msg, at_sender=True)
+
+@sv.on_fullmatch('查看下班')
+async def check_off(bot, ev):
+    gid = str(ev.group_id)
+    if gid not in zhaomu:
+        text = "表是空的哦qwq"
+        await bot.send(ev, text)
+        return
+    msg, user = process_table_off(gid, "下班人")
+    if  isinstance(msg, str):
+        await bot.send(ev, msg)
+    else:
+        new_msg = [f'下班人数{len(msg)}:'] + msg
+    await bot.send(ev, '\n'.join(new_msg))
+    
+
+@sv.on_fullmatch('查看未打卡')
+async def check_on(bot, ev):
+    gid = str(ev.group_id)
+    member_list = await bot.get_group_member_list(group_id=int(gid))
+    if gid not in zhaomu:
+        text = "表是空的哦qwq"
+        await bot.send(ev, text)
+        return
+    msg, user = process_table_off(gid, "下班人")
+    if  isinstance(msg, str):
+        await bot.send(ev, msg)
+    else:
+        new_list = []
+        for mem in member_list:
+            if str(mem['user_id']) not in user:
+                if str(mem['user_id']) not in out_group:
+                    name = mem['card'] or mem['nickname'] or str(mem['user_id'])
+                    new_list.append(f"{name}")
+        res = [f'在岗人数{len(new_list)}:'] + new_list
+        await bot.send(ev, '\n'.join(res))
 
 
-
-# @sv.on_fullmatch('取消下班')
-# async def delete_single_zhaomu(bot, ev):
-
-#     gid = str(ev.group_id)
-#     uid = str(ev.user_id)
-
-#     if uid == "80000000":
-#         msg = "匿名你取消下班个🔨哦"
-#         await bot.send(ev, msg)
-#         return
-
-#     ok = delete_user(gid, uid)
-
-#     if ok:
-#         msg = "取消下班成功～"
-#     else:
-#         msg = "下班表没找你惹qwq是不是记错了？"
-
-#     await bot.send(ev, msg, at_sender=True)
+    
 
 
 # 目录-clear function--------------------------------------------------------------------------------------------------------------------
 
-# @sv.on_fullmatch('清空下班表')
+@sv.on_fullmatch('清空下班表')
 # @on_command('清空公会战状态', only_to_me=True)
-# async def cancle_zhaomu(session):
-#     zhaomu = {}
-#     savefile()
-
-#     await bot.send('删除成功')
+async def cancle_zhaomu(bot, ev):
+    gid = str(ev.group_id)
+    if priv.get_user_priv(ev) < 21:
+        await bot.send(ev, f'有人问只能群管理设置呢')
+        return
+    if gid in zhaomu:
+        zhaomu[gid] = {}
+        await bot.send(ev, '删除成功')
+        savefile()
+        return
