@@ -51,7 +51,7 @@ def savefile():
 # 目录-挂树--------------------------------------------------------------------------------------------------------------------
 
 
-def add_message_tree(gid, uid, ev, bot, message):
+async def add_message_tree(gid, uid, ev, bot, message):
     if gid not in zhaomu:
         zhaomu[gid] = {}
     title = "树上人"
@@ -104,7 +104,7 @@ async def leave_tree(bot, ev):
 
 # 目录-出刀--------------------------------------------------------------------------------------------------------------------
 
-def add_message_chudao(gid, uid, ev, bot, message):
+async def add_message_chudao(gid, uid, ev, bot, message):
     if gid not in zhaomu:
         zhaomu[gid] = {}
     title = "出刀人"
@@ -157,7 +157,7 @@ async def leave_chudao(bot, ev):
 
 # 目录-合刀--------------------------------------------------------------------------------------------------------------------
 
-def add_message_hedao(gid, uid, ev, bot, message):
+async def add_message_hedao(gid, uid, ev, bot, message):
     if gid not in zhaomu:
         zhaomu[gid] = {}
     title = "合刀人"
@@ -170,7 +170,7 @@ def add_message_hedao(gid, uid, ev, bot, message):
         await bot.send(ev, msg, at_sender=True)
         return
     else:
-        msg = "已经在出刀哒“
+        msg = "已经在出刀哒"
         await bot.send(ev, msg, at_sender=True)
         return
 
@@ -269,11 +269,11 @@ def process_table(gid, title):
         qq.append(user)
 
     if msg == []:
-        if title == "合刀人"
+        if title == "合刀人":
             msg = "没有人合刀"
-        if title == "出刀人"
+        if title == "出刀人":
             msg = "没有人出刀"
-        if title == "挂树人"
+        if title == "挂树人":
             msg = "没有人挂树"
 
     return msg, qq
@@ -339,9 +339,9 @@ async def query_table(bot, ev):
 # 目录-clear function--------------------------------------------------------------------------------------------------------------------
 
 # @sv.on_fullmatch('清空下班表')
-@on_command('清空公会战状态', only_to_me=True)
-async def cancle_zhaomu(session):
-    zhaomu = {}
-    savefile()
+# @on_command('清空公会战状态', only_to_me=True)
+# async def cancle_zhaomu(session):
+#     zhaomu = {}
+#     savefile()
 
-    await bot.send('删除成功')
+#     await bot.send('删除成功')
