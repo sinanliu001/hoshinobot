@@ -5,8 +5,7 @@ try:
 except:
     import json
 
-sv_help = '''公会战信息整合工具ver1.0.0
-- [预约] [信息]      预约boss,一个账号只能预约一次,预约多个boss请在信息标注
+sv_help = '''公会战信息整合工具ver2.0.0
 - [进] [信息] 		出刀，一个账号只能有一个出刀，取消出刀状态/结束出刀请用[取消出刀]
 - [挂树] [信息]      挂树，下树请用[下树]
 - [合刀] [信息]      合到+信息,一个账号只能有一个合刀信息，【取消合刀】来取消。
@@ -14,11 +13,12 @@ sv_help = '''公会战信息整合工具ver1.0.0
 例子：合刀 123
 预约 123
 挂树 2
-－[清空公会战状态]    管理特权
-- [清空下班表] 	清空下班表
-－[查刀]    字面意思
+- [清空公会战状态|清空公会战状态|清空状态|清空表格]    管理特权
+- [清空下班表|清空下班] 	管理特权
+- [查刀]    字面意思
 '''.strip()
 # - [清空下班表] 	清空下班表
+# - [预约] [信息]      预约boss,一个账号只能预约一次,预约多个boss请在信息标注
 
 sv = Service('battle', use_priv=priv.NORMAL, manage_priv=priv.ADMIN,
              visible=True, help_=sv_help, enable_on_default=True, bundle='查询')
@@ -337,6 +337,14 @@ async def add_message_off(gid, uid, ev, bot, name):
         savefile()
         msg = "下班成功，感谢公会战付出^W^"
         await bot.send(ev, msg, at_sender=True)
+        chudao_ok = delete_user(gid, uid, "出刀人")
+        tree_ok = delete_user(gid, uid, "树上人")
+        hedao_ok = delete_user(gid, uid, "合刀人")、
+        await bot.send(ev, "(ᗜ ˰ ᗜ)正在清理和你相关的出刀记录……")
+        if chudao_ok and tree_ok and hedao_ok:
+            await bot.send(ev, "ヾ(*´▽‘*)ﾉ清理结束~~ ")
+        else:
+            await bot.send(ev, "(“▔□▔)清理失败…………管理help!!!")
         return
     else:
         if priv.get_user_priv(ev) < 21:
@@ -429,21 +437,35 @@ async def check_on(bot, ev):
         res = [f'在岗人数{len(new_list)}:'] + new_list
         await bot.send(ev, '\n'.join(res))
 
-
-    
-
-
 # 目录-clear function--------------------------------------------------------------------------------------------------------------------
 
-@sv.on_fullmatch('清空下班表')
+@sv.on_fullmatch('清空下班表','清空下班')
 # @on_command('清空公会战状态', only_to_me=True)
 async def cancle_zhaomu(bot, ev):
     gid = str(ev.group_id)
     if priv.get_user_priv(ev) < 21:
-        await bot.send(ev, f'有人问只能群管理设置呢')
+        await bot.send(ev, f'只能群管理设置呢 (:3[▓▓]')
         return
     if gid in zhaomu:
         zhaomu[gid] = {}
-        await bot.send(ev, '删除成功')
+        await bot.send(ev, '删除成功~~')
+        savefile()
+        return
+
+@sv.on_fullmatch('清空公会战状态', '清空状态', '清空表格')
+# @on_command('清空公会战状态', only_to_me=True)
+async def cancle_zhaomu(bot, ev):
+    gid = str(ev.group_id)
+    if priv.get_user_priv(ev) < 21:
+        await bot.send(ev, f'只能群管理设置呢 (:3[▓▓]')
+        return
+    if gid in zhaomu:
+        if '出刀人' in zhaomu[gid]:
+            zhaomu[gid]['出刀人'] = {}
+        if '树上人' in zhaomu[gid]:
+            zhaomu[gid]['树上人'] = {}
+        if '合刀人' in zhaomu[gid]:
+            zhaomu[gid]['合刀人'] = {}
+        await bot.send(ev, '删除成功~~')
         savefile()
         return
