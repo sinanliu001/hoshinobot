@@ -487,7 +487,7 @@ async def cancle_zhaomu(bot, ev):
     if priv.get_user_priv(ev) < 21:
         await bot.send(ev, f'只能群管理设置呢 (:3[▓▓]')
         return
-    if gid in zhaomu:
+    if gid not in zhaomu:
         zhaomu[gid] = {}
         member_list = await bot.get_group_member_list(group_id=int(gid))
         new_list = []

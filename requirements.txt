@@ -21,3 +21,4 @@ peony-twitter[all]~=2.1.2
 cloudscraper~=1.2.60
 filetype==1.0.7
 sqlitedict
+ffmpeg

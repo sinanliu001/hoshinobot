@@ -73,13 +73,13 @@ async def chat_neigui(bot, ctx):
     if random.random() < 0.10:
         await bot.send(ctx, R.img('内鬼.png').cqcode)
 
-nyb_player = f'''{R.img('newyearburst.gif').cqcode}
-正在播放：New Year Burst
-──●━━━━ 1:05/1:30
-⇆ ㅤ◁ ㅤㅤ❚❚ ㅤㅤ▷ ㅤ↻
-'''.strip()
+# nyb_player = f'''{R.img('newyearburst.gif').cqcode}
+# 正在播放：New Year Burst
+# ──●━━━━ 1:05/1:30
+# ⇆ ㅤ◁ ㅤㅤ❚❚ ㅤㅤ▷ ㅤ↻
+# '''.strip()
 
-@sv.on_keyword('春黑', '新黑')
-async def new_year_burst(bot, ev):
-    if random.random() < 0.02:
-        await bot.send(ev, nyb_player)
+# @sv.on_keyword('春黑', '新黑')
+# async def new_year_burst(bot, ev):
+#     if random.random() < 0.02:
+#         await bot.send(ev, nyb_player)
