@@ -12,7 +12,7 @@ DEBUG = False               # 调试模式
 
 BLACK_LIST = [1974906693]   # 黑名单，权限为 BLACK = -999
 WHITE_LIST = []             # 白名单，权限为 WHITE = 51
-SUPERUSERS = [10000]        # 填写超级用户的QQ号，可填多个用半角逗号","隔开，权限为 SUPERUSER = 999
+SUPERUSERS = [1321270694]        # 填写超级用户的QQ号，可填多个用半角逗号","隔开，权限为 SUPERUSER = 999
 NICKNAME = 'susu'               # 机器人的昵称。呼叫昵称等同于@bot，可用元组配置多个昵称
 
 COMMAND_START = {''}        # 命令前缀（空字符串匹配任何消息）
@@ -40,20 +40,22 @@ MODULES_ON = {
     # 'kancolle',
     # 'mikan',
     # 'pcrclanbattle',
-    # 'priconne',
+    'priconne',
     # 'setu',
-    # 'translate',
+    'translate',
     # 'twitter',
     # 'battle',
-    # 'XQA',
+    'XQA',
     # 'buy_potion_reminder',
     # 'bili-notice-hoshino',
     # 'teamup',
-    # 'carryover_cal',
+    'carryover_cal',
     # 'battleV2',
-    # 'image-generate',
-    # 'xcw',
+    'image-generate',
+    'xcw',
     # 'aichat_chatGPT_API',
-    # 'echo',
+    'echo',
     'battleV3',
+    'groupguess',
+    'aichat-chatGPT',
 }

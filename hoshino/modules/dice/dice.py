@@ -5,10 +5,19 @@ from hoshino import Service
 from hoshino.typing import CQEvent
 from hoshino.util import filt_message
 
+sv_help = '''[.r] 掷骰子
+[.r 3d12] 掷3次12面骰子
+[.r 1d6] 掷1次6面骰子
+'''.strip()
+
 sv = Service('dice', help_='''
 [.r] 掷骰子
 [.r 3d12] 掷3次12面骰子
 '''.strip())
+
+@sv.on_fullmatch(["掷骰子"])
+async def bangzhu(bot, ev):
+    await bot.send(ev, sv_help, at_sender=True)
 
 async def do_dice(bot, ev, num, min_, max_, opr, offset, TIP="的掷骰结果是："):
     if num == 0:

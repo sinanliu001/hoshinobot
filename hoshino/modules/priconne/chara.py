@@ -236,7 +236,7 @@ async def download_pcr_chara_icon(sess: CommandSession):
     '''
     try:
         ch = fromname(sess.current_arg_text.strip())
-        assert ch.id != UNKNOWN, '未知角色名'
+        # assert ch.id != UNKNOWN ## '未知角色名'
         await asyncio.gather(
             download_chara_icon(ch.id, 6),
             download_chara_icon(ch.id, 3),

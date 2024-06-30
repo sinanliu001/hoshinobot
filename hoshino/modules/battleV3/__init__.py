@@ -11,8 +11,8 @@ except:
 sv_help = '''公会战信息整合工具ver3.0.0
 - [进/出刀] [信息] 		出刀，一个账号只能有一个出刀，取消出刀状态/结束出刀请用[取消出刀]
 - [挂树] [信息]      挂树，下树请用[下树]
-- [预约] [信息]      合到+信息,一个账号只能有一个预约信息，【取消预约】来取消。
-- [合刀] [BOSS血量] [刀1] [刀2] 计算合刀后尾刀时间
+- [预约] [信息]      预约+信息,一个账号只能有一个预约信息，【取消预约】来取消。
+- [合刀] [刀1] [刀2] [BOSS血量] 计算合刀后尾刀时间
 - [补偿计算/转秒 <返还时间> <时间轴>] 【返还时间+空格】后必须换行
 可接受的时间格式：以65秒为例，“065”，“65s”，“105”，“1:05”，“01：05”等均可。
 例：输入       返回
@@ -82,6 +82,27 @@ async def party_build(bot, ev):
         await bot.send(ev, msg, at_sender=True)
     return
 
+@sv.on_fullmatch('解散该群公会')
+async def party_reject(bot, ev):
+    gid = str(ev.group_id)
+    uid = str(ev.user_id)
+    if uid == "80000000":
+        msg = "匿名建个🔨公会"
+        await bot.send(ev, msg)
+        return
+    if priv.get_user_priv(ev) < 21:
+        await bot.send(ev, f'只能群管理设置呢 (:3[▓▓]')
+        return
+    if gid in zhaomu:
+        del zhaomu[gid]
+        savefile()
+        msg = "公会解散TAT"
+        await bot.send(ev, msg, at_sender=True)
+    else:
+        msg = "公会不存在"
+        await bot.send(ev, msg, at_sender=True)
+    return
+
 # 目录-群名----------------------------------------------------------------------------------------------------------------
 
 async def find_name(bot, gid, uid):
@@ -102,8 +123,8 @@ async def join_party(bot, ev):
         await bot.send(ev, msg)
         return
     if gid not in zhaomu:
-        msg = "请建立公会先！！！指令：建会"
-        await bot.send(ev, msg, at_sender=True)
+      #  msg = "请建立公会先！！！指令：建会"
+      # await bot.send(ev, msg, at_sender=True)
         return
     else:
         if uid not in zhaomu[gid]:
@@ -134,8 +155,8 @@ async def join_party_other(bot, ev):
         await bot.send(ev, f'请输入正确的格式RUA！”')
         return
     if gid not in zhaomu:
-        msg = "请建立公会先！！！指令：建会"
-        await bot.send(ev, msg, at_sender=True)
+      #  msg = "请建立公会先！！！指令：建会"
+      # await bot.send(ev, msg, at_sender=True)
         return
     else:
         if uid not in zhaomu[gid]:
@@ -168,8 +189,8 @@ async def quit_party(bot, ev):
         await bot.send(ev, msg)
         return
     if gid not in zhaomu:
-        msg = "请建立公会先！！！指令：建会"
-        await bot.send(ev, msg, at_sender=True)
+      #  msg = "请建立公会先！！！指令：建会"
+      # await bot.send(ev, msg, at_sender=True)
         return
     else:
         if uid not in zhaomu[gid]:
@@ -192,8 +213,8 @@ async def quit_party(bot, ev):
         await bot.send(ev, f'请输入正确的格式RUA！”')
         return
     if gid not in zhaomu:
-        msg = "请建立公会先！！！指令：建会"
-        await bot.send(ev, msg, at_sender=True)
+      #  msg = "请建立公会先！！！指令：建会"
+      # await bot.send(ev, msg, at_sender=True)
         return
     else:
         if uid not in zhaomu[gid]:
@@ -210,8 +231,8 @@ async def quit_party(bot, ev):
 
 async def update_message(bot, ev, gid, uid, name, message, title):
     if gid not in zhaomu:
-        msg = "请建立公会先！！！指令：建会"
-        await bot.send(ev, msg, at_sender=True)
+      #  msg = "请建立公会先！！！指令：建会"
+      # await bot.send(ev, msg, at_sender=True)
         return
     if uid not in zhaomu[gid]:
         msg = "你不在公会哦~"
@@ -461,8 +482,8 @@ async def send_detail(bot, ev, title):
     gid = str(ev.group_id)
 
     if gid not in zhaomu:
-        msg = "请建立公会先！！！指令：建会"
-        await bot.send(ev, msg, at_sender=True)
+      #  msg = "请建立公会先！！！指令：建会"
+      # await bot.send(ev, msg, at_sender=True)
         return
     if len(zhaomu[gid].keys()) == 0:
         msg = "光杆司令查什么刀"
@@ -474,6 +495,7 @@ async def send_detail(bot, ev, title):
         await bot.send(ev, msg)
     else:
         new_msg = render_forward_msg(msg, user)
+        await bot.send(ev, title)
         await bot.send_group_forward_msg(group_id=ev.group_id, messages=new_msg)
     return
 
@@ -503,7 +525,12 @@ async def feedback(bot, ev: CQEvent):
     content = cmd.split()
     print(content)
     if len(content) != 3:
-        await bot.finish(ev, sv.help)
+        gid = str(ev.group_id)
+        # if gid not in zhaomu:
+            #  msg = "请建立公会先！！！指令：建会"
+        msg = '[合刀] [刀1] [刀2] [BOSS血量] 计算合刀后尾刀时间'
+        await bot.finish(ev, msg)
+        # await bot.finish(ev, sv.help)
     try:
         d1 = float(content[0])
         d2 = float(content[1])
@@ -539,8 +566,8 @@ async def feedback(bot, ev: CQEvent):
 
 async def delete_user_off(gid, uid, ev, bot, name):
     if gid not in zhaomu:
-        msg = "请建立公会先！！！指令：建会"
-        await bot.send(ev, msg, at_sender=True)
+      #  msg = "请建立公会先！！！指令：建会"
+      # await bot.send(ev, msg, at_sender=True)
         return
     title = "打卡"
     if uid not in zhaomu[gid]:
@@ -558,8 +585,8 @@ async def delete_user_off(gid, uid, ev, bot, name):
 
 async def add_message_off(gid, uid, ev, bot, name):
     if gid not in zhaomu:
-        msg = "请建立公会先！！！指令：建会"
-        await bot.send(ev, msg, at_sender=True)
+      #  msg = "请建立公会先！！！指令：建会"
+      # await bot.send(ev, msg, at_sender=True)
         return
     title = "打卡"
     if uid not in zhaomu[gid]:
@@ -662,8 +689,8 @@ async def delete_single_off_other(bot, ev):
 
 async def restore_sl(gid, uid, ev, bot, name):
     if gid not in zhaomu:
-        msg = "请建立公会先！！！指令：建会"
-        await bot.send(ev, msg, at_sender=True)
+      #  msg = "请建立公会先！！！指令：建会"
+      # await bot.send(ev, msg, at_sender=True)
         return
     title = "SL"
     if uid not in zhaomu[gid]:
@@ -681,8 +708,8 @@ async def restore_sl(gid, uid, ev, bot, name):
 
 async def add_message_sl(gid, uid, ev, bot, name):
     if gid not in zhaomu:
-        msg = "请建立公会先！！！指令：建会"
-        await bot.send(ev, msg, at_sender=True)
+      #  msg = "请建立公会先！！！指令：建会"
+      # await bot.send(ev, msg, at_sender=True)
         return
     title = "SL"
     if uid not in zhaomu[gid]:
@@ -848,4 +875,20 @@ async def auto_delete_form():
             zhaomu[group][member]["SL"] = 0
     savefile()
     msg = "test"
-    await sv.broadcast(msg, 'battleV3')
+    sv.logger.info(f'会战每日更新')
+
+# @sv.scheduled_job('cron', hour='4')
+# async def auto_delete_form():
+#     print("test")
+#     if zhaomu == {}:
+#         return
+#     for group in zhaomu:
+#         for member in zhaomu[group]:
+#             zhaomu[group][member]["出刀"] = ""
+#             zhaomu[group][member]["预约"] = ""
+#             zhaomu[group][member]["挂树"] = ""
+#             zhaomu[group][member]["打卡"] = 0
+#             zhaomu[group][member]["SL"] = 0
+#     savefile()
+#     msg = "test"
+#     sv.logger.info(f'会战每日更新')
