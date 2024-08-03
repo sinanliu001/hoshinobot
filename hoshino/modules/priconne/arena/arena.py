@@ -181,7 +181,7 @@ async def do_query(id_list, region=1, try_cnt=1):
                 "page": 1,
                 "sort": 1,
                 "ts": int(time.time()),
-                "region": region,a
+                "region": region,
             }
 
             query_again = False

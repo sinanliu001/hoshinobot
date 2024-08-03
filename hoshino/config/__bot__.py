@@ -58,4 +58,5 @@ MODULES_ON = {
     'battleV3',
     'groupguess',
     'aichat-chatGPT',
+    'yobot'
 }

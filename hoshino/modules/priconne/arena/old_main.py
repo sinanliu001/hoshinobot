@@ -318,7 +318,7 @@ async def getPos(img: Image):
                         x, y, w, h = rec
                         cropped = img.crop([x + 2, y + 2, x + w - 2, y + h - 2])
                         uid_6, unit_id, unit_name, similarity = await getUnit(cropped)
-                        print(uid_6, unit_id, unit_name, similarity)  # 0 0 Unknown -1~-5
+                        # print(uid_6, unit_id, unit_name, similarity)  # 0 0 Unknown -1~-5
                         if unit_id == 0:
                             highlight(rec, "black")
                         else:
