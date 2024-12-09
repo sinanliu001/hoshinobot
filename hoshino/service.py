@@ -183,7 +183,8 @@ class Service:
         return gl
 
 
-    def on_message(self, event='group') -> Callable:
+    # def on_message(self, event='group') -> Callable:
+    def on_message(self, *events) -> Callable:
         def deco(func) -> Callable:
             @wraps(func)
             async def wrapper(ctx):
@@ -194,7 +195,8 @@ class Service:
                         self.logger.error(f'{type(e)} occured when {func.__name__} handling message {ctx["message_id"]}.')
                         self.logger.exception(e)
                     return
-            return self.bot.on_message(event)(wrapper)
+            # return self.bot.on_message(event)(wrapper)
+            return self.bot.on_message(*events)(wrapper)
         return deco
 
 

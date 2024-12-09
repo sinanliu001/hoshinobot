@@ -32,6 +32,8 @@ async def random_repeater(bot, ev: CQEvent):
             if random.random() < p:    # 概率测试通过，复读并设flag
                 try:
                     group_stat[group_id] = (msg, True, 0)
+                    if ev.message.extract_plain_text() == "[该接龙表情不支持查看，请使用QQ最新版本]":
+                        return
                     await bot.send(ev, util.filt_message(ev.message))
                 except CQHttpError as e:
                     hoshino.logger.error(f'复读失败: {type(e)}')

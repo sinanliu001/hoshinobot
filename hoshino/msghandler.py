@@ -7,8 +7,8 @@ from hoshino.typing import CQEvent
 @message_preprocessor
 async def handle_message(bot, event: CQEvent, _):
 
-    if event.detail_type != 'group':
-        return
+    # if event.detail_type != 'group':
+    #   return
 
     for t in trigger.chain:
         for service_func in t.find_handler(event):

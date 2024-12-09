@@ -80,5 +80,6 @@ def get_user_priv(ev: CQEvent):
 def check_priv(ev: CQEvent, require: int) -> bool:
     if ev['message_type'] == 'group':
         return bool(get_user_priv(ev) >= require)
+        # return True # bu
     else:
-        return False  # bu允许私聊
+        return True  # bu允许私聊
